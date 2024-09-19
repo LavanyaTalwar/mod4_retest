@@ -1,0 +1,5 @@
+name: 'email_noti'
+type: module
+description: 'This module sends email notificaton to the editor incharge of the news anchor'
+package: Custom
+core_version_requirement: ^10 || ^11

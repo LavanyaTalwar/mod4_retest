@@ -1,0 +1,21 @@
+news_anchor:
+  path: /register/news_anchor
+  url: /user/register/news_anchor
+  redirect_path: /
+  hidden: 0
+  form_mode_register: register
+  form_mode_edit: default
+editor:
+  news_anchor:
+    path: /register/news_anchor
+    url: /user/register/news_anchor
+    redirect_path: /
+    hidden: 0
+    form_mode_register: register
+    form_mode_edit: default
+  path: /register/editor
+  url: /user/register/editor
+  redirect_path: /
+  hidden: 0
+  form_mode_register: register
+  form_mode_edit: default

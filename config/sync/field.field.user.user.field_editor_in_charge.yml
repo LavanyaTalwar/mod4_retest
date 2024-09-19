@@ -1,0 +1,46 @@
+uuid: e4833eb2-382f-4ba7-a7b5-8d03379f1836
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_editor_in_charge
+  module:
+    - multiple_registration
+    - user
+third_party_settings:
+  multiple_registration:
+    user_additional_register_form_required:
+      news_anchor: news_anchor
+      authenticated: 0
+      editor: 0
+    user_additional_register_form:
+      news_anchor: news_anchor
+      authenticated: 0
+      editor: 0
+id: user.user.field_editor_in_charge
+field_name: field_editor_in_charge
+entity_type: user
+bundle: user
+label: 'Editor in charge'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    filter:
+      type: role
+      role:
+        editor: editor
+        content_editor: '0'
+        administrator: '0'
+        news_anchor: '0'
+    include_anonymous: true
+field_type: entity_reference

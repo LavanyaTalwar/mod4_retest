@@ -1,0 +1,19 @@
+uuid: bd51a80d-a599-4ce8-bde7-ac69ae9ee680
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.news
+  module:
+    - field_permissions
+    - node
+id: editor
+label: Editor
+weight: 5
+is_admin: null
+permissions:
+  - 'create field_hash_tags'
+  - 'edit any news content'
+  - 'edit own field_hash_tags'
+  - 'view field_hash_tags'
+  - 'view own field_hash_tags'

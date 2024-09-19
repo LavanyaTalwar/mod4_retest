@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Contains news_clean.module file that clean 6th month old data.
+ */
+
+use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_cron().
+ */
+function news_cleanup_cron() {
+  $six_months_ago = strtotime('-6 months');
+  $formatted_date = date('Y-m-d\TH:i:s', $six_months_ago);
+  $query = \Drupal::entityQuery('node')
+    ->condition('type', 'news')
+    ->condition('created', strtotime($formatted_date), '<')
+    ->condition('status', 1)
+    ->accessCheck(FALSE);
+  $nids = $query->execute();
+  if (!empty($nids)) {
+    $deleted_news_titles = [];
+    foreach (Node::loadMultiple($nids) as $node) {
+      $deleted_news_titles[] = $node->getTitle();
+      $node->delete();
+    }
+    news_cleanup_send_email_to_editors($deleted_news_titles);
+  }
+}
+
+/**
+ * Sends an email to all editors informing them of deleted news.
+ *
+ * @param array $deleted_news_titles
+ *   An array of the titles of deleted news articles.
+ */
+function news_cleanup_send_email_to_editors(array $deleted_news_titles) {
+  $role = 'editor';
+  $query = \Drupal::entityQuery('user')
+    ->condition('status', 1)
+    ->condition('roles', $role)
+    ->accessCheck(FALSE);
+  $uids = $query->execute();
+  if (empty($uids)) {
+    return;
+  }
+  $users = User::loadMultiple($uids);
+  $news_list = implode("\n", $deleted_news_titles);
+  $mail_body = "The following news articles older than six months have been deleted:\n\n" . $news_list;
+  foreach ($users as $user) {
+    $mailManager = \Drupal::service('plugin.manager.mail');
+    $module = 'news_cleanup';
+    $key = 'deleted_news_notification';
+    $to = $user->getEmail();
+    $params['message'] = $mail_body;
+    $langcode = $user->getPreferredLangcode();
+    $send = TRUE;
+    $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function news_cleanup_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'deleted_news_notification':
+      $message['subject'] = t('Deleted News Articles Notification');
+      $message['body'][] = $params['message'];
+      break;
+  }
+}

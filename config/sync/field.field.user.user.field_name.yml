@@ -1,0 +1,31 @@
+uuid: a5c40220-c817-47c6-bb44-e45fcf568c3f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_name
+  module:
+    - multiple_registration
+    - user
+third_party_settings:
+  multiple_registration:
+    user_additional_register_form_required:
+      news_anchor: news_anchor
+      editor: editor
+      authenticated: 0
+    user_additional_register_form:
+      news_anchor: news_anchor
+      editor: editor
+      authenticated: 0
+id: user.user.field_name
+field_name: field_name
+entity_type: user
+bundle: user
+label: Name
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,18 @@
+uuid: 4f2b0e31-a053-4702-acd4-96094df6b424
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.news
+  module:
+    - node
+id: news_anchor
+label: 'News Anchor'
+weight: 4
+is_admin: null
+permissions:
+  - 'create news content'
+  - 'delete any news content'
+  - 'delete own news content'
+  - 'edit any news content'
+  - 'edit own news content'
