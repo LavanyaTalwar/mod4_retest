@@ -38,3 +38,4 @@ sites/simpletest
 # Ignore all JS build files and node modules
 dist
 node_modules
+/.gitattributes

@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * @file
+ * Custom code for sending email to the editor in charge.
+ */
+
+use Drupal\node\NodeInterface;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_node_presave().
+ *
+ * Sends an email notification to the Editor in charge whenever a news node is
+ * created or updated.
+ *
+ * The news node entity being saved.
+ */
+function email_noti_node_presave(NodeInterface $node) {
+  if ($node->bundle() == 'news') {
+    $anchor_user_id = $node->getOwnerId();
+    $anchor_user = User::load($anchor_user_id);
+
+    if ($anchor_user->hasField('field_editor_in_charge') && !$anchor_user->get('field_editor_in_charge')->isEmpty()) {
+      $editor_ids = $anchor_user->get('field_editor_in_charge')->getValue();
+
+      foreach ($editor_ids as $editor_id) {
+        $editor_user = User::load($editor_id['target_id']);
+
+        if ($editor_user) {
+          email_noti_send_email($editor_user, $node);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Sends an email notification to the editor.
+ *
+ * @param \Drupal\user\Entity\User $editor_user
+ *   The Editor user entity.
+ * @param \Drupal\node\NodeInterface $node
+ *   The news node entity.
+ */
+function email_noti_send_email(User $editor_user, NodeInterface $node) {
+  $mailManager = \Drupal::service('plugin.manager.mail');
+  $module = 'email_noti';
+  $key = 'news_update';
+  $to = $editor_user->getEmail();
+  $langcode = $editor_user->getPreferredLangcode();
+
+  $params['subject'] = t('News update: @title', ['@title' => $node->getTitle()]);
+  $params['message'] = t('Dear @editor, the news "@title" has been created/updated by @anchor.', [
+    '@editor' => $editor_user->getDisplayName(),
+    '@title' => $node->getTitle(),
+    '@anchor' => $node->getOwner()->getDisplayName(),
+  ]);
+
+  $result = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, TRUE);
+
+  if ($result['result'] !== TRUE) {
+    \Drupal::logger('email_noti')->error('There was a problem sending the email to @editor.', ['@editor' => $editor_user->getDisplayName()]);
+  }
+  else {
+    \Drupal::logger('email_noti')->notice('Notification sent to @editor about the news "@title".', [
+      '@editor' => $editor_user->getDisplayName(),
+      '@title' => $node->getTitle(),
+    ]);
+  }
+}
+
+/**
+ * Implements hook_mail().
+ *
+ * Defines the email content for the 'news_update' key.
+ */
+function email_noti_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'news_update':
+      $message['subject'] = $params['subject'];
+      $message['body'][] = $params['message'];
+      break;
+  }
+}

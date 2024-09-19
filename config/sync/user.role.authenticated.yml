@@ -23,6 +23,7 @@ permissions:
   - 'access content'
   - 'access shortcuts'
   - 'access site-wide contact form'
+  - 'access user profiles'
   - 'delete own files'
   - 'post comments'
   - 'search content'
