@@ -1,0 +1,7 @@
+name: 'News Cleanup'
+type: module
+description: 'Automatically deletes news older than six months and sends email to editors.'
+core_version_requirement: ^10
+package: Custom
+dependencies:
+  - drupal:node

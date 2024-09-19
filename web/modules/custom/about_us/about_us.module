@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Contains custom_form.module.
+ *
+ * Provides functionality for managing custom forms and displaying
+ * configuration data related to the About Us page, including leadership
+ * and anchor information.
+ */
+
+/**
+ * Implements hook to define a theme hook for the custom form data.
+ */
+function about_us_theme($existing, $type, $theme, $path) {
+  return [
+    'about_us_data' => [
+      'variables' => [
+        'content' => [],
+        'anchorReference' => '',
+        'description' => '',
+        'latestNews' => [],
+      ],
+      'template' => 'about-us-data',
+    ],
+  ];
+}

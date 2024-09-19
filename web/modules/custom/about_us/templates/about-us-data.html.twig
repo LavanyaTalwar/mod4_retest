@@ -1,0 +1,35 @@
+<div class="custom-form-data">
+  {% for group in content %}
+    <div class="leader-container">
+      <div class="leader-name">{{ group.leaderName }}</div>
+      <div class="leader-designation">{{ group.designation }}</div>
+      <div class="leader-linkedin-link">
+        <a href="{{ group.linkedinLink }}">{{ group.linkedinLink }}</a>
+      </div>
+      {% if group.profileImage %}
+        <div class="leader-profile-image">
+          <img src="{{ group.profileImage }}" alt="Profile Image">
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+<div class="anchor-reference">
+  {% if anchorReference %}
+    <div class="anchor">Anchor Name: {{ anchorReference }}</div>
+    <div class="description">Description: {{ description }}</div>
+    <div class="latest-news">
+      <h3>Latest News:</h3>
+      {% if latestNews %}
+        <ul>
+          {% for news in latestNews %}
+            <li><a href="{{ news.url }}">{{ news.title }}</a></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No recent news articles.</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
